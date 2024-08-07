@@ -1,0 +1,10 @@
+hy2://714cb85d-0ac7-4eda-93c2-c825b307a86c@139.162.49.168:20000?mport=20000-50000&insecure=1&sni=www.bing.com#%E5%89%A9%E4%BD%99%E6%B5%81%E9%87%8F%EF%BC%9A50%20GB
+hy2://714cb85d-0ac7-4eda-93c2-c825b307a86c@139.162.49.168:20000?mport=20000-50000&insecure=1&sni=www.bing.com#%E5%A5%97%E9%A4%90%E5%88%B0%E6%9C%9F%EF%BC%9A2024-11-06
+hy2://714cb85d-0ac7-4eda-93c2-c825b307a86c@139.162.49.168:20000?mport=20000-50000&insecure=1&sni=www.bing.com#%E7%8B%AE%E5%9F%8E%201%20(%E7%A7%BB%E5%8A%A8)
+vless://714cb85d-0ac7-4eda-93c2-c825b307a86c@139.162.49.168:443?security=reality&sni=www.tesla.com&allowInsecure=1&fp=chrome&pbk=xmxF47eNaA7gevSN7JTb9BL7YLX1Yu_-cRpF6HiEJyE&sid=57067adc&type=tcp&encryption=none#%E7%8B%AE%E5%9F%8E%202%20(%E7%A7%BB%E5%8A%A8)
+vless://714cb85d-0ac7-4eda-93c2-c825b307a86c@140.245.32.59:60000?security=reality&sni=fated.org&allowInsecure=1&fp=chrome&pbk=xmxF47eNaA7gevSN7JTb9BL7YLX1Yu_-cRpF6HiEJyE&sid=57067adc&type=tcp&encryption=none#%E7%8B%AE%E5%9F%8E%203%20(%E7%A7%BB%E5%8A%A8)
+hy2://714cb85d-0ac7-4eda-93c2-c825b307a86c@172.104.105.55:20000?mport=20000-50000&insecure=1&sni=www.bing.com#%E4%B8%9C%E4%BA%AC%201%20(%E7%A7%BB%E5%8A%A8%E8%81%94%E9%80%9A)
+vless://714cb85d-0ac7-4eda-93c2-c825b307a86c@172.104.105.55:443?security=reality&sni=www.tesla.com&allowInsecure=1&fp=chrome&pbk=xmxF47eNaA7gevSN7JTb9BL7YLX1Yu_-cRpF6HiEJyE&sid=57067adc&type=tcp&encryption=none#%E4%B8%9C%E4%BA%AC%202%20(%E7%A7%BB%E5%8A%A8%E8%81%94%E9%80%9A)
+vless://714cb85d-0ac7-4eda-93c2-c825b307a86c@52.198.240.187:12010?security=reality&sni=www.tesla.com&allowInsecure=1&fp=chrome&pbk=xmxF47eNaA7gevSN7JTb9BL7YLX1Yu_-cRpF6HiEJyE&sid=57067adc&type=tcp&encryption=none#%E4%B8%9C%E4%BA%AC%203%20(%E8%B5%B7%E9%A3%9E)
+hy2://714cb85d-0ac7-4eda-93c2-c825b307a86c@45.79.100.250:20000?mport=20000-50000&insecure=1&sni=www.bing.com#%E7%BE%8E%E5%9B%BD%201%20(%E7%94%B5%E4%BF%A1)
+vless://714cb85d-0ac7-4eda-93c2-c825b307a86c@45.79.100.250:443?security=reality&sni=www.tesla.com&allowInsecure=1&fp=chrome&pbk=xmxF47eNaA7gevSN7JTb9BL7YLX1Yu_-cRpF6HiEJyE&sid=57067adc&type=tcp&encryption=none#%E7%BE%8E%E5%9B%BD%202%20(%E7%94%B5%E4%BF%A1)
