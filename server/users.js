@@ -20,9 +20,11 @@ users.post('/login', async ctx => {
       data = data[0]
 
       // 判断token是否存在,不存在则生成
-      data.token = data.token_header + data.token_body
+      data.token = data.token_body
+      // console.log(data.token)
+
       let token_temp = await UserVerify(data.token)
-      console.log(token_temp);
+      // console.log(token_temp)
 
       if (data.token === null || !token_temp || token_temp === false) {
         // 生成token时间
@@ -47,7 +49,7 @@ users.post('/login', async ctx => {
         const { token_header, token_body } = createToken({ id: data.id, username: data.username, nickname: data.nickname, rule: null, rules: null, number: 30, level: data.level }, time)
         data.token_body = token_body
 
-        const temp = await insertToken(data.id, data.token_header, data.token_body)
+        const temp = await insertToken(data.id, token_header, token_body)
         if (temp.affectedRows === 0) {
           ctx.body = ctx.body = {
             code: 8402,

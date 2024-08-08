@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
 const config = require('../config/config.js')
-const { findToken } = require('./mysql.js')
+const { findToken, findToken_header } = require('./mysql.js')
 
 const createToken = (data, time) => {
   let token = jwt.sign(data, config.privateKey, {
@@ -14,17 +14,24 @@ const createToken = (data, time) => {
   }
   return token
 }
-// console.log(createToken({ id: 1, username: "guest", nickname: "游客", rule: null, rules: null, number: 30, level: "M" }, '3d'))
+// console.log(createToken({ id: 1, username: "guest", nickname: "游客", rule: null, rules: null, number: 30, level: "M" }, '3650d'))
 
 const verifyToken = () => {
   return async (ctx, next) => {
-    const token = ctx.query.token
     try {
+      let token_body = ctx.query.token
+      const data = await findToken_header(token_body)
+      if (data.length === 0) {
+        return false
+      }
+      token_header = data[0].token_header
+      token = data[0].token_header + data[0].token_body
+
       const verifyRes = await jwt.verify(token, config.privateKey, { algorithm: 'RS512' }, async (err, res) => {
         if (err) {
           return false
         } else {
-          const temp = await findToken(res.id, token)
+          const temp = await findToken(res.id, token_header, token_body)
 
           if (temp.length === 0) {
             return false
@@ -37,6 +44,8 @@ const verifyToken = () => {
             ctx.number = res.number
             ctx.level = res.level
             ctx.token = token
+            ctx.token_header = token_header
+            ctx.token_body = token_body
             await next()
             return true
           }
@@ -63,7 +72,16 @@ const verifyToken = () => {
 
 const UserVerify = async (token) => {
   try {
-    const data = await jwt.verify(token, config.privateKey, { algorithm: 'RS512' }, (err, res) => {
+    let token_new = token
+    // console.log(token_new)
+    const res = await findToken_header(token_new)
+    if (res.length === 0) {
+      return false
+    }
+    token_new = res[0].token_header + res[0].token_body
+    // console.log(token_new)
+
+    const data = await jwt.verify(token_new, config.privateKey, { algorithm: 'RS512' }, (err, res) => {
       if (err) {
         return false
       } else {

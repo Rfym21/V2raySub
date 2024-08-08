@@ -41,15 +41,21 @@ const findUser = (id) => {
   return v2api.query(_sql)
 }
 
+// 根据token_body查找对应的token_header
+const findToken_header = (token_body) => {
+  const _sql = `select * from users where token_body="${token_body}"`
+  return v2api.query(_sql)
+}
+
 // 给用户注入一个token
-const insertToken = (id, token) => {
-  const _sql = `update users set token="${token}" where id="${id}"`
+const insertToken = (id, token_header, token_body) => {
+  const _sql = `update users set token_header="${token_header}" , token_body="${token_body}" where id="${id}"`
   return v2api.query(_sql)
 }
 
 // token唯一性验证
-const findToken = (id, token) => {
-  const _sql = `select * from users where id="${id}" and token="${token}"`
+const findToken = (id, token_header, token_body) => {
+  const _sql = `select * from users where id="${id}" and token_header="${token_header}" and token_body="${token_body}"`
   return v2api.query(_sql)
 }
 
@@ -58,6 +64,7 @@ v2api.register = register
 v2api.findUser = findUser
 v2api.insertToken = insertToken
 v2api.findToken = findToken
+v2api.findToken_header = findToken_header
 
 module.exports = {
   v2api,
@@ -65,5 +72,6 @@ module.exports = {
   register,
   findUser,
   insertToken,
-  findToken
+  findToken,
+  findToken_header
 }

@@ -1,19 +1,12 @@
 const token = require('@koa/router')()
 const { createToken, UserVerify } = require('./lib/jwt.js')
-const { insertToken, findUser } = require('./lib/mysql.js')
-const config = require('./config/config.js')
+const { insertToken, findUser, findToken } = require('./lib/mysql.js')
 
 token.get('/token', async ctx => {
-  const token = ctx.query.token || null
-  console.log(token)
-
+  let token = ctx.query.token || null
 
   if (token && token === 'guest') {
-    // 生成 Token
-    const tokenGuest = createToken({ id: 1, username: "guest", nickname: "游客", rule: null, rules: null, number: 30, level: "M" }, '3d')
-    console.log("用户: => ", token, " | 获取Token: => ", tokenGuest)
-    // 返回 Token
-    ctx.body = tokenGuest
+    ctx.body = 'pBMWzcRAkfB2L2QIbeucd0N9JpPBQHFIrPATLiasb6aWX051_b5Sw9YeMWgMFoPH9zTg_QXvZOrFJaQElSWfq7XMsym32PmD8DLJAqPHj6dSlxwGMCkNzQEaQmz-Y0FFY6sxlV-fXQKRtJMvugAzCTXBqacQhRCIPZp9HEJnZDWUQ50dW-dV3RfOu7OmnH_g60anovOSNfuDNFvWozvxTAxEbTQvaJwwpk6gtawkDBTiUna9hFqdNn2pw6iG8s_iCIt9S3FyGArkr1840mJJKxEnCqkmpyp9bOYuBHVxm-xWnDgm9o9hfph0327xldzuyiwJ1Dss0MEJxKAoepi_qS1JtAoV48DciTKM96orqeFHFGEc3J1tNPFNHV0YSVNLuto6zRY0q31XTvtWr37pZE2C00dw7gE36ozU3E_QfTy66nTlhA-4ykC1DJHb5ZwnhhFr0EUJCV9VDXJvB1fifpFjf7cj0LCOnarRBzZEw18Au0PE7KiYAq8rImtmnjdeCgQdneABvFPgq2zicskZ3kt54ZCwt_n2UuiVnwmb_1UCHnFo10IC7jr70z0efXq-MGQlozU-epC5VygdYOy15rOTBGbykahLsUBfeQfy6UPRzFOp69FMfyFBp_-C-8W2IGSS_fOoZ5CUPuAu_JLU9cf0NU_BQAMKTcjph3WbxKo'
   } else if (token) {
     // 验证用户 Token
     const UserInfo = await UserVerify(token)
@@ -66,7 +59,7 @@ token.get('/token', async ctx => {
         } else {
           level_new = info[0].level || level
           const token_new = await createToken({ id, username, nickname, rule: rule_new, rules: rules_new, number: number_new, level: level_new }, time)
-          const data = await insertToken(id, token_new)
+          const data = await insertToken(id, token_new.token_header, token_new.token_body)
           if (data.affectedRows === 0) {
             ctx.body = ctx.body = {
               code: 8402,
@@ -85,11 +78,11 @@ token.get('/token', async ctx => {
               rules: rules_new,
               number: number_new,
               level: level_new,
-              token: token_new
+              token: token_new.token_body
             }
 
           }
-          console.log("用户: => ", token, " | 获取Token: => ", token_new)
+          console.log("用户: => ", username, " | 获取Token: => ", token_new)
 
         }
 
