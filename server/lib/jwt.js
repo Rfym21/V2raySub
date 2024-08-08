@@ -1,35 +1,85 @@
 const jwt = require('jsonwebtoken')
-
-const key = `Rfym2_${new Date("2019-11-8").getTime()}_v2ray`
+const config = require('../config/config.js')
+const { findToken } = require('./mysql.js')
 
 const createToken = (data, time) => {
-  return jwt.sign(data, key, { expiresIn: time })
+  let token = jwt.sign(data, config.privateKey, {
+    algorithm: 'RS512',
+    expiresIn: time
+  })
+  token = token.split('.')
+  token = {
+    token_header: `${token[0]}.${token[1]}.`,
+    token_body: token[2]
+  }
+  return token
 }
+// console.log(createToken({ id: 1, username: "guest", nickname: "游客", rule: null, rules: null, number: 30, level: "M" }, '3d'))
 
 const verifyToken = () => {
-  return (ctx, next) => {
+  return async (ctx, next) => {
     const token = ctx.query.token
     try {
-      jwt.verify(token, key, async (err, res) => {
+      const verifyRes = await jwt.verify(token, config.privateKey, { algorithm: 'RS512' }, async (err, res) => {
         if (err) {
-          ctx.header['Content-Type'] = 'text/html'
-          ctx.body = '<h1 style="margin: 200px auto; width: 300px; text-align: center;font-size:48px;">无效Token</h1>'
+          return false
         } else {
-          ctx.rules = res.rules
-          ctx.number = res.number
-          ctx.level = res.level
-          ctx.token = token
-          await next()
+          const temp = await findToken(res.id, token)
+
+          if (temp.length === 0) {
+            return false
+          } else {
+            ctx.id = res.id
+            ctx.username = res.username
+            ctx.nickname = res.nickname
+            ctx.rule = res.rule
+            ctx.rules = res.rules
+            ctx.number = res.number
+            ctx.level = res.level
+            ctx.token = token
+            await next()
+            return true
+          }
         }
       })
+
+      if (verifyRes === false) {
+        ctx.body = {
+          code: 8402,
+          message: '错误信息: 用户Token校验失败'
+        }
+        return
+      }
+
+      return
     } catch (e) {
-      ctx.header['Content-Type'] = 'text/html'
-      ctx.body = '<h1 style="margin: 200px auto; width: 300px; text-align: center;font-size:48px;">无效Token</h1>'
+      ctx.body = {
+        code: 8401,
+        message: '错误信息: 服务器异常！'
+      }
     }
   }
 }
 
+const UserVerify = async (token) => {
+  try {
+    const data = await jwt.verify(token, config.privateKey, { algorithm: 'RS512' }, (err, res) => {
+      if (err) {
+        return false
+      } else {
+        return res
+      }
+    })
+
+    return data
+  } catch (e) {
+    return false
+  }
+
+}
+
 module.exports = {
   createToken,
-  verifyToken
+  verifyToken,
+  UserVerify
 }

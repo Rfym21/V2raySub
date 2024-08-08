@@ -1,52 +1,26 @@
 const fs = require('fs')
 const path = require('path')
 const { base64Encode } = require('./base64.js')
+const config = require('../config/config.js')
 
 
-// ---------------------------------以下为处理规则---------------------------------
-
-// ---------------------------------以下为配置---------------------------------
-
-const config = {
-  level: {
-    M: ['Na', 'Ca', 'He'],
-    Y: ['Zn', 'Si', 'Na', 'Ca', 'He'],
-    F: ['Cu', 'Cl', 'Zn', 'Si', 'Na', 'Ca', 'He'],
-    R: ['me', 'Fe', 'Cu', 'Cl', 'Zn', 'Si', 'Na', 'Ca', 'He']
-  },
-  rules: {
-    better: (files) => { files.splice(6, files.length) },
-    only: (files) => { files.splice(1, files.length) }
-  },
-  file: {
-    me: 'me.txt',
-    Fe: 'Fe.txt',
-    Cu: 'Cu.txt',
-    Cl: 'Cl.txt',
-    Zn: 'Zn.txt',
-    Si: 'Si.txt',
-    Ca: 'Ca.txt',
-    Na: 'Na.txt',
-    He: 'He.txt'
-  }
-}
-
-const getProxy = (rules, number, level) => {
+const getProxy = (rule, rules, number, level) => {
+  // console.log(rule, rules, number, level)
 
   // 获取相应的文件内容,初始仓库  
   let content = []
   // 拿到对应等级的文件列表
-  const files = config.level[level]
+  let files = config.level[level]
   // 判断是否有对应的规则
-  if (config.rules[rules]) {
-    config.rules[rules](files)
+  if (config.rules[rule]) {
+    files = config.rules[rule](files, rules)
   }
 
   // 遍历列表拿到文件内容
   for (let item of files) {
     // 判断是否有对应的文件
-    if (config.file[item]) {
-      const temp = getFIle(`${config.file[item]}`)
+    if (config.files[item]) {
+      const temp = getFIle(`${config.files[item]}`)
       if (temp === false) {
         return false
       } else {
@@ -55,7 +29,6 @@ const getProxy = (rules, number, level) => {
 
     }
   }
-
 
   // 用于存储随机节点
   let sub = []
@@ -89,6 +62,9 @@ const getProxy = (rules, number, level) => {
     sub = content
   }
 
+  // console.log(files)
+  // console.log(sub)
+  
   // 转为字符串，并对其进行 Base64 编码
   sub = base64Encode(sub.join('\n'))
   // 将编码后的字符串返回
@@ -98,9 +74,9 @@ const getProxy = (rules, number, level) => {
 
 
 // ---------------------------------以下为获取文件---------------------------------
-const getFIle = (fileName) => {  
+const getFIle = (fileName) => {
   // 使用 path.resolve() 方法创建文件的绝对路径
-  const File = path.resolve(__dirname, '..','data', fileName)
+  const File = path.resolve(__dirname, '..', 'data', fileName)
   try {
     const fileContent = fs.readFileSync(File, 'utf-8')
     const contentArray = fileContent.split(/\r?\n/).map(line => line.trim())
